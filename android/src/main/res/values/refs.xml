@@ -3,4 +3,10 @@
     <item type="layout" name="launch_screen">
         @layout/launch_screen
     </item>
+    <item type="string" name="splash_progress">
+        @string/splash_progress
+    </item>
+    <item type="id" name="progress_text">
+        @id/progress_text
+    </item>
 </resources>
