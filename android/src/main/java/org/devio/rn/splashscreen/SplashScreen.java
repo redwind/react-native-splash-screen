@@ -3,11 +3,7 @@ package org.devio.rn.splashscreen;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
-
 import java.lang.ref.WeakReference;
 
 /**
@@ -22,9 +18,6 @@ public class SplashScreen {
     private static Dialog mSplashDialog;
     private static WeakReference<Activity> mActivity;
     private static final String TAG = "SplashScreen";
-    private static int  progress = 0;
-    private static Thread progressThread;
-    private static TextView progressText = null;
     /**
      * 打开启动屏
      */
@@ -54,54 +47,16 @@ public class SplashScreen {
             public void run() {
                 if (!activity.isFinishing()) {
                     mSplashDialog = new Dialog(activity, themeResId);
-                    LayoutInflater inflater = (LayoutInflater)   activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View view = inflater.inflate( R.layout.launch_screen, null);
-                    progressText =(TextView) view.findViewById(R.id.progress_text);
-                    mSplashDialog.setContentView(view);
+                    mSplashDialog.setContentView(R.layout.launch_screen);
                     mSplashDialog.setCancelable(false);
-                    progressThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            while (progress <99){
-                                progress = doSomeWork();
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(progressText != null)
-                                            progressText.setText(String.format(activity.getString(R.string.splash_progress),progress));
-                                    }
-                                });
-                            }
-                        }
-                    });
-
                     if (!mSplashDialog.isShowing()) {
                         mSplashDialog.show();
-                        progressThread.start();
                     }
                 }
             }
         });
     }
-
-    private static int doSomeWork() {
-        try {
-            // ---simulate doing some work---
-            if(progress == 25){
-                Thread.sleep(1000);
-            }else if(progress == 48){
-                Thread.sleep(1000);
-            }else if(progress == 80){
-                Thread.sleep(1000);
-            }else{
-                Thread.sleep(50);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ++progress;
-    }
-
+    
     /**
      * 打开启动屏
      */
@@ -130,15 +85,11 @@ public class SplashScreen {
         }
         if (activity == null) return;
 
-        final Activity localActivity = activity;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mSplashDialog != null && mSplashDialog.isShowing()) {
-                    if(progressText != null)
-                        progressText.setText(String.format(localActivity.getString(R.string.splash_progress),100));
                     mSplashDialog.dismiss();
-                    progressThread.interrupt();
                 }
 
 //                mSplashView.splashAndDisappear(new ISplashListener(){
@@ -168,7 +119,7 @@ public class SplashScreen {
 //                        mSplashView = null;
 //                    }
 //                });
-            }
+           }
         });
     }
 }
