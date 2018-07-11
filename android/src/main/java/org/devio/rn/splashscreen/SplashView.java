@@ -1,4 +1,4 @@
-package com.cboy.rn.splashscreen;
+package org.devio.rn.splashscreen;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
